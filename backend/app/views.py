@@ -15,3 +15,4 @@ def test_api(request):
             "user" : request.user.username
         }
     )
+

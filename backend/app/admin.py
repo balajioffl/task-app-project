@@ -7,3 +7,4 @@ admin.site.site_header = 'Task App'
 admin.site.register(Role)
 admin.site.register(Task)
 admin.site.register(UserProfile)
+
