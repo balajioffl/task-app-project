@@ -82,3 +82,10 @@ def get_user_groups(request):
         "username": request.user.username,
         "groups": list(request.user.groups.values_list("name", flat=True))
     })
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    return Response({
+        "username": request.user.username,
+    })

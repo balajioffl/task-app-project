@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import check, test_api,get_user_groups
+from .views import check, test_api,get_user_groups,profile
 from rest_framework_simplejwt.views import(TokenObtainPairView,TokenRefreshView)
 from rest_framework.routers import DefaultRouter
 from .views import TaskViewSet
@@ -13,6 +13,7 @@ urlpatterns = [
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh'),
     path('test/', test_api, name='test_api'),
     path("user-groups/", get_user_groups),
+    path("profile/", profile, name="profile"),
     path("", include(router.urls)),
 ]
 
