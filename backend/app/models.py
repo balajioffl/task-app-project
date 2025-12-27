@@ -23,6 +23,8 @@ class Task(models.Model):
     priority = models.CharField(max_length=10,choices=PRIORITY_CHOICES,default='low')
     due_date = models.DateField(null=True,blank=True)
 
+    attachment = models.FileField(upload_to='tasks/', null=True, blank=True)
+
     created_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='created_task')
     assigned_to = models.ForeignKey(
         User,

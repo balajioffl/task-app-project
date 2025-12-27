@@ -5,6 +5,8 @@ from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import PermissionDenied
 from .models import Task
 from .serializers import TaskSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+
 
 @api_view(["GET"])
 def check(request):
@@ -27,6 +29,7 @@ class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
 
     def get_queryset(self):
