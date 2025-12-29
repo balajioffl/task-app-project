@@ -6,6 +6,8 @@ from django.core.exceptions import PermissionDenied
 from .models import Task
 from .serializers import TaskSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
+from .pagination import TaskPagination
+from rest_framework.filters import SearchFilter
 
 
 @api_view(["GET"])
@@ -30,6 +32,9 @@ class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+    pagination_class = TaskPagination
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'description']
 
 
     def get_queryset(self):
