@@ -8,6 +8,11 @@ from .serializers import TaskSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from .pagination import TaskPagination
 from rest_framework.filters import SearchFilter
+from django.core.cache import cache
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @api_view(["GET"])
@@ -45,11 +50,39 @@ class TaskViewSet(ModelViewSet):
             return Task.objects.all()
         
         return Task.objects.filter(created_by=user)
+    
+
+    def list(self, request, *args, **kwargs):
+
+        user = request.user
+        is_admin = user.groups.filter(name="Admin").exists()
+
+        cache_key = "tasks_list_admin" if is_admin else f"tasks_list_user_{user.id}"
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+
+            logger.info("Task cache Hit")
+            print("Cache Hit")
+            return Response(cached_data)
+        
+        logger.info("Task cache hit miss")
+        print("Task cache hit miss")
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(cache_key, response.data, timeout=60)
+
+        return response
 
 
     def perform_create(self, serializer):
 
         serializer.save(created_by=self.request.user)
+
+        cache.delete("tasks_list_admin")
+        cache.delete(f"tasks_list_user_{self.request.user.id}")
+
+        print("Cache cleared after task create")
 
 
     def perform_update(self,serializer):
@@ -65,6 +98,11 @@ class TaskViewSet(ModelViewSet):
 
             else:
                 raise PermissionDenied("You can only edit your own task !")
+
+        cache.delete("tasks_list_admin")
+        cache.delete(f"tasks_list_user_{serializer.instance.created_by.id}")
+
+        print("Cache cleared after task update")
             
         
     def perform_destroy(self, instance):
@@ -80,6 +118,11 @@ class TaskViewSet(ModelViewSet):
 
             else:
                 raise PermissionDenied("You can only delete your own task only !")
+            
+        cache.delete("tasks_list_admin")
+        cache.delete(f"tasks_list_user_{instance.created_by.id}")
+
+        print("Cache cleared after task delete")
             
     
 @api_view(['GET'])
@@ -97,3 +140,5 @@ def profile(request):
     return Response({
         "username": request.user.username,
     })
+
+
