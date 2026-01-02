@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import PermissionDenied
 from .models import Task
+from django.contrib.auth.models import User
 from .serializers import TaskSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from .pagination import TaskPagination
@@ -11,6 +12,8 @@ from rest_framework.filters import SearchFilter
 from django.core.cache import cache
 from django.conf import settings
 import logging
+from .tasks import task_activity_log
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,17 +60,23 @@ class TaskViewSet(ModelViewSet):
         user = request.user
         is_admin = user.groups.filter(name="Admin").exists()
 
-        cache_key = "tasks_list_admin" if is_admin else f"tasks_list_user_{user.id}"
+        page = request.query_params.get("page", 1)
+        search = request.query_params.get("search", "")
+        page_size = request.query_params.get("page_size", settings.REST_FRAMEWORK.get("PAGE_SIZE"))
+
+        cache_key = (
+            f"tasks_admin_p{page}_s{search}_ps{page_size}"
+            if is_admin
+            else f"tasks_user_{user.id}_p{page}_s{search}_ps{page_size}"
+        )
+
         cached_data = cache.get(cache_key)
 
         if cached_data:
-
-            logger.info("Task cache Hit")
             print("Cache Hit")
             return Response(cached_data)
-        
-        logger.info("Task cache hit miss")
-        print("Task cache hit miss")
+
+        print("Cache Miss")
 
         response = super().list(request, *args, **kwargs)
         cache.set(cache_key, response.data, timeout=60)
@@ -77,10 +86,11 @@ class TaskViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
 
-        serializer.save(created_by=self.request.user)
+        task = serializer.save(created_by=self.request.user)
 
-        cache.delete("tasks_list_admin")
-        cache.delete(f"tasks_list_user_{self.request.user.id}")
+        task_activity_log.delay(task.id,"CREATED",self.request.user.username)
+
+        cache.clear()
 
         print("Cache cleared after task create")
 
@@ -90,17 +100,18 @@ class TaskViewSet(ModelViewSet):
         user = self.request.user
 
         if user.groups.filter(name="Admin").exists():
-            serializer.save()
+            task = serializer.save()
 
         else:
             if serializer.instance.created_by == user:
-                serializer.save()
+                task = serializer.save()
 
             else:
                 raise PermissionDenied("You can only edit your own task !")
+            
+        task_activity_log.delay(task.id,"UPDATED",user.username)
 
-        cache.delete("tasks_list_admin")
-        cache.delete(f"tasks_list_user_{serializer.instance.created_by.id}")
+        cache.clear()
 
         print("Cache cleared after task update")
             
@@ -108,6 +119,7 @@ class TaskViewSet(ModelViewSet):
     def perform_destroy(self, instance):
         
         user = self.request.user
+        task_id = instance.id
 
         if user.groups.filter(name="Admin").exists():
             instance.delete()
@@ -119,8 +131,9 @@ class TaskViewSet(ModelViewSet):
             else:
                 raise PermissionDenied("You can only delete your own task only !")
             
-        cache.delete("tasks_list_admin")
-        cache.delete(f"tasks_list_user_{instance.created_by.id}")
+        task_activity_log.delay(task_id,"DELETED",user.username)
+            
+        cache.clear()
 
         print("Cache cleared after task delete")
             
@@ -141,4 +154,10 @@ def profile(request):
         "username": request.user.username,
     })
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_list(request):
+    users = User.objects.all().values('id', 'username')
+    return Response(users)
 
