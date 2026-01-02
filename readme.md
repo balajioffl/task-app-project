@@ -51,3 +51,41 @@ creating react app
 start react server
 
     npm start
+
+
+# Task Management Backend (Django + DRF + Celery + Redis)
+
+This project is a backend Task Management system built using **Django** and **Django Rest Framework** with **JWT Authentication**, **Redis caching**, and **Celery** for background task processing.
+
+It supports:
+- Role-based access (Admin / User)
+- Task CRUD operations
+- Search & Pagination
+- Redis caching
+- Asynchronous task logging using Celery
+
+---
+
+## Features
+
+- JWT Authentication (Login & Protected APIs)
+- Admin & User role handling
+- Create, Update, Delete Tasks
+- Search & Pagination
+- Redis caching for task list APIs
+- Celery background tasks for activity logging
+- MySQL database
+- File upload support
+
+
+##  Tech Stack
+
+- **Backend**: Django, Django REST Framework  
+- **Auth**: JWT (SimpleJWT)  
+- **Database**: MySQL  
+- **Cache & Broker**: Redis  
+- **Async Tasks**: Celery  
+- **Frontend**: React
+
+
+
