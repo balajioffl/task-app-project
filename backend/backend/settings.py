@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'app',
     'corsheaders',
     'rest_framework',
-    'django_celery_results'
+    'django_celery_results',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,10 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
 
     "EXCEPTION_HANDLER": "backend.exceptions.custom_exception_handler",
