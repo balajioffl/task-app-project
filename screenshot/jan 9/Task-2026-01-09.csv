@@ -1,0 +1,17 @@
+id,title,description,status,priority,due_date,attachment,created_by,assigned_to,created_at
+30,Redis Caching for Task List APIs,Setup Redis connection in Django.,in_progress,medium,2025-12-31,tasks/Screenshot_from_2025-12-27_11-16-54.png,1,4,2025-12-29 06:00:37
+29,Pagination & Search,To implement pagination for created task and also perform search opertaion on that,in_progress,medium,2026-01-03,tasks/Screenshot_from_2025-12-26_14-26-20.png,4,2,2025-12-29 05:53:52
+28,File upload - Django,to implement file upload and media upload using Django,in_progress,medium,2026-01-05,tasks/Screenshot_from_2025-12-19_18-09-50_WB6L6lq.png,4,2,2025-12-29 05:50:57
+27,Error handling ( global ),implement global error handling,in_progress,medium,2026-01-09,tasks/Screenshot_from_2025-12-27_11-15-34.png,2,4,2025-12-29 05:49:48
+26,Frontend CRUD ( UI integration ),to perform task CRUD on react,completed,medium,2026-01-11,tasks/Screenshot_from_2025-12-27_11-16-04.png,3,4,2025-12-29 05:14:08
+25,Task CRUD,implement CRUD operations for task model ( backend only ) using DRF,in_progress,high,2026-01-09,tasks/Screenshot_from_2025-12-19_18-09-50.png,4,2,2025-12-29 05:11:39
+24,React Auth UI,implement react protected route which only logged in user and authenticated user can access,in_progress,medium,2026-01-07,,3,4,2025-12-29 05:10:03
+23,RBAC Access,To implement role based access control for admin and normal users,in_progress,high,2026-01-05,tasks/balaji.js,1,3,2025-12-29 05:08:10
+22,Login Page,implement login page with JWT aunthentication,in_progress,high,2026-01-02,tasks/Screenshot_from_2025-12-27_10-34-49.png,1,4,2025-12-29 05:06:41
+21,Backend Models,"To create backend models for users,tasks etc..",in_progress,medium,2026-01-01,,4,1,2025-12-29 05:05:02
+20,Configure MySQL DB connection,setting up the db configuration with mysql database,in_progress,high,2025-12-31,tasks/db_57x5uN5.sqlite3,3,4,2025-12-29 05:02:51
+19,Setting up Django project,create django project and app for task app,in_progress,medium,2026-01-06,tasks/Screenshot_from_2025-12-23_15-48-18.png,4,3,2025-12-29 05:01:39
+10,React UI Page,to create react UI for tasklist and taskform,in_progress,medium,2025-12-23,,4,3,2025-12-22 05:24:42
+3,Check API ( postman ),check all the API in postman,pending,medium,2025-12-25,,2,3,2025-12-18 11:12:51
+2,Github repo,creating github repository for project,in_progress,medium,2025-12-31,tasks/db.sqlite3,1,2,2025-12-16 09:19:48
+1,Project setup,Need to create folders for frontend and backend,in_progress,low,2026-01-08,tasks/Screenshot_from_2025-12-24_12-13-23.png,1,2,2025-12-16 05:43:55

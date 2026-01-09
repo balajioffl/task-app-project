@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'django_celery_results',
-    'django_filters'
+    'django_filters',
+    "import_export",
 ]
 
 MIDDLEWARE = [

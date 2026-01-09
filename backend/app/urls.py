@@ -2,7 +2,7 @@ from django.urls import path,include
 from .views import check, test_api,get_user_groups,profile,user_list
 from rest_framework_simplejwt.views import(TokenObtainPairView,TokenRefreshView)
 from rest_framework.routers import DefaultRouter
-from .views import TaskViewSet
+from .views import TaskViewSet,export_csv,export_pdf
 
 router = DefaultRouter()
 router.register(r'tasks', TaskViewSet)
@@ -15,5 +15,7 @@ urlpatterns = [
     path("user-groups/", get_user_groups),
     path("profile/", profile, name="profile"),
     path("users/", user_list,name="view-list"),
+    path("export/tasks/csv/", export_csv),
+    path("export/tasks/pdf/", export_pdf),
     path("", include(router.urls)),
 ]

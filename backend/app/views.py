@@ -16,6 +16,9 @@ from django.core.cache import cache
 from django.conf import settings
 import logging
 from .tasks import task_activity_log
+import csv
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 
 logger = logging.getLogger(__name__)
@@ -176,4 +179,38 @@ def profile(request):
 def user_list(request):
     users = User.objects.all().values('id', 'username')
     return Response(users)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def export_csv(request):
+    
+    response = HttpResponse(content_type='text/csv')
+    response["Content-Disposition"] = 'attachment; filename="tasks.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(["ID", "Title", "Status", "Priority"])
+
+    for task in Task.objects.all():
+        writer.writerow(["ID", "Title", "Status", "Priority"])
+
+    return response
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def export_pdf(request):
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="tasks.pdf"'
+
+    p = canvas.Canvas(response)
+    y = 800
+
+    for task in Task.objects.all():
+
+        p.drawString(50,y,task.title)
+        y = -20
+
+        p.save()
+
+    return response
 
