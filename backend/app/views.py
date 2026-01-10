@@ -207,10 +207,30 @@ def export_pdf(request):
 
     for task in Task.objects.all():
 
-        p.drawString(50,y,task.title)
-        y = -20
+        p.setFont("Helvetica-Bold", 10)
 
-        p.save()
+        p.drawString(50, y, f"Title: {task.title}")
+        y -= 15
 
+        p.setFont("Helvetica", 9)
+        
+        p.drawString(70, y, f"Status: {task.status}")
+        y -= 15
+
+        p.drawString(70, y, f"Priority: {task.priority}")
+        y -= 15
+
+        p.drawString(70, y, f"Due Date: {task.due_date if task.due_date else 'N/A'}")
+        y -= 10
+
+        p.line(50, y, 550, y)
+        y -= 20
+
+        if y < 80:
+            p.showPage()
+            y = 800
+
+    p.save()
     return response
+
 
