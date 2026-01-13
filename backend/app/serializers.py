@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Task
+from .models import Task,Profile
 from datetime import date
+
 
 class TaskSerializer(serializers.ModelSerializer):
     
@@ -18,3 +19,11 @@ class TaskSerializer(serializers.ModelSerializer):
         if value and value < date.today():
             raise serializers.ValidationError("Due date cannot be in the past")
         return value
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Profile
+        fields = ["bio_pic"]

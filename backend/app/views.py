@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import PermissionDenied
-from .models import Task
+from rest_framework.views import APIView
+from .models import Task,Profile
 from django.db.models import Q
 from django.contrib.auth.models import User
 from .serializers import TaskSerializer
@@ -19,6 +20,7 @@ from .tasks import task_activity_log
 import csv
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
+import os
 
 
 logger = logging.getLogger(__name__)
@@ -213,7 +215,7 @@ def export_pdf(request):
         y -= 15
 
         p.setFont("Helvetica", 9)
-        
+
         p.drawString(70, y, f"Status: {task.status}")
         y -= 15
 
@@ -234,3 +236,52 @@ def export_pdf(request):
     return response
 
 
+class ProfileView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+
+        profile, created = Profile.objects.get_or_create(user=request.user)
+
+        return Response({ 
+            "username": request.user.username,
+            "bio_pic": profile.bio_pic.url if profile.bio_pic else None 
+        })
+
+
+class ProfileUpdate(APIView):
+    
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def put(self, request):
+
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+
+        if "bio_pic" not in request.data:
+            return Response({ "error": "bio_pic required"}, status=400 )
+
+        profile.bio_pic = request.data["bio_pic"]
+        profile.save()
+
+        return Response({ "bio_pic": profile.bio_pic.url })
+
+
+class ProfileDelete(APIView):
+    
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+
+        profile, created = Profile.objects.get_or_create(user=request.user)
+
+        if profile.bio_pic:
+
+            file_path = profile.bio_pic.path
+            profile.bio_pic.delete(save=False)
+
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+        return Response({"message": "Bio pic deleted"})
