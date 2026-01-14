@@ -16,11 +16,13 @@ from rest_framework.filters import SearchFilter
 from django.core.cache import cache
 from django.conf import settings
 import logging
-from .tasks import task_activity_log
+from .tasks import task_activity_log,send_task_assigned_email
 import csv
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 import os
+from django.core.mail import send_mail
+from celery import shared_task
 
 
 logger = logging.getLogger(__name__)
@@ -106,6 +108,13 @@ class TaskViewSet(ModelViewSet):
 
             task_activity_log.delay(task.id,"CREATED",self.request.user.username)
 
+            if task.assigned_to:
+                send_task_assigned_email.delay(
+                    task.assigned_to.email,
+                    task.title,
+                    user.username
+                )
+
             cache.clear()
 
             print("Cache cleared after task create")
@@ -114,26 +123,34 @@ class TaskViewSet(ModelViewSet):
             raise PermissionDenied("You can only view tasks!")
 
 
-    def perform_update(self,serializer):
+    def perform_update(self, serializer):
 
         user = self.request.user
         task = serializer.instance
-
+        old_assigned_to = task.assigned_to
+        
         if user.groups.filter(name="Admin").exists():
-            serializer.save()
+            updated_task = serializer.save()
 
         elif user.groups.filter(name="Manager").exists():
 
             if task.created_by == user or task.assigned_to == user:
-                serializer.save()
-
+                updated_task = serializer.save()
             else:
                 raise PermissionDenied("Managers can only edit tasks they created or are assigned to!")
-        
+
         else:
             raise PermissionDenied("Members cannot edit tasks!")
-            
-        task_activity_log.delay(task.id,"UPDATED",user.username)
+
+        task_activity_log.delay(task.id, "UPDATED", user.username)
+
+        if updated_task.assigned_to and updated_task.assigned_to != old_assigned_to:
+           
+            send_task_assigned_email.delay(
+                updated_task.assigned_to.email,
+                updated_task.title,
+                user.username
+            )
 
         cache.clear()
 
@@ -285,3 +302,4 @@ class ProfileDelete(APIView):
                 os.remove(file_path)
 
         return Response({"message": "Bio pic deleted"})
+    
