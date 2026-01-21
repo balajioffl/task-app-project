@@ -4,6 +4,7 @@ import TaskForm from "./TaskForm";
 import { useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorBoundary from "./ErrorBoundary";
 import "./TaskList.css";
 
 function TaskList() {
@@ -67,6 +68,10 @@ function TaskList() {
       useEffect(() => {
         fetchTasks();
       },[searchParams]);
+
+    //   useEffect(() => {
+    //   throw new Error("Test error in TaskList!");
+    // }, []);
 
       useEffect(() => {
      
@@ -371,9 +376,10 @@ function TaskList() {
 
             <li key={task.id}>
               <p><b>{task.title}</b></p>
-              <p>{task.description}</p>
+              <i>{task.description}</i>
               <p>Status: {task.status}</p>
               <p>Priority: {task.priority}</p>
+              <p>Created At: {new Date(task.created_at).toLocaleString()}</p>
               <p>Due: {task.due_date}</p>
 
               {task.attachment && (

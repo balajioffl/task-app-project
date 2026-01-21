@@ -2,11 +2,11 @@
 
 This project has a **Django backend** and a **React frontend**.
 
-# folders
+# Folders
 
 backend (django) and frontend (react)
 
-# backend Setup
+# Backend Setup
 
 creating virtual environment
 
@@ -42,7 +42,7 @@ creating virtual environment
 
     python3 manage.py runserver
 
-# frontend Setup
+# Frontend Setup
 
 creating react app
 
