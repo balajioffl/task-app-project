@@ -1,0 +1,32 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+.check-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6f8;
+}
+
+.check-card {
+  background: #ffffff;
+  padding: 30px 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.check-title {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.check-status {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e7d32; 
+}
