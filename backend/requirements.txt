@@ -1,3 +1,6 @@
+# Database (MySQL)
+pymysql
+
 # Core Django
 Django>=4.2,<5.0
 
@@ -5,15 +8,13 @@ Django>=4.2,<5.0
 djangorestframework
 djangorestframework-simplejwt
 
-# Database (MySQL)
-pymysql
-
 # Redis & Caching
 redis
 django-redis
 
 # Celery (Async Tasks)
 celery
+django-celery-results
 
 # File Upload / Images
 Pillow
@@ -21,17 +22,21 @@ Pillow
 # Environment variables
 python-dotenv
 
-# CORS (if frontend is React)
+# CORS
 django-cors-headers
 
 # Filtering & search support
 django-filter
 
-# Production helpers (optional but safe)
+# Production helpers
 gunicorn
 
 # Logging & utilities
 pytz
 
-# daphne
-daphne -b 127.0.0.1 -p 8000 backend.asgi:application
+# export engine
+django-import-export
+
+# channels
+channels
+reportlab

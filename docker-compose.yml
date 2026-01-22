@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3000"
+
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: rootpassworddocker-compose up backend
+
+
+  redis:
+    image: redis:7
+    ports:
+      - "6380:6379" 
+
+  worker:
+    build: ./backend
+    command: celery -A backend worker -l info
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
