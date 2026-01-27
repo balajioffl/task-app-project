@@ -222,6 +222,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "balajioffl07@gmail.com"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+if not EMAIL_HOST_PASSWORD:
+    EMAIL_HOST_PASSWORD = "__SET_EMAIL_PASSWORD_IN_ENV__"
+
 
 ASGI_APPLICATION = "backend.asgi.application"
 
