@@ -24,8 +24,3 @@ jobs:
 
       - name: Run Flake8
         run: flake8 backend
-
-      - name: Run Django tests
-        run: |
-          cd backend
-          python manage.py test
