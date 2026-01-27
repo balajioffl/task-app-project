@@ -4,9 +4,13 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .models import Task
 from .serializers import TaskSerializer
+from django.conf import settings
 
 @receiver(post_save, sender=Task)
 def task_saved(sender, instance, created, **kwargs):
+
+    if settings.IS_TESTING:
+        return
 
     channel_layer = get_channel_layer()
 

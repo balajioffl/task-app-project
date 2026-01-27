@@ -20,7 +20,7 @@ import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-IS_TESTING = "test" in sys.argv or os.getenv("GITHUB_ACTIONS") == "true"
+IS_TESTING = "test" in sys.argv or os.environ.get("GITHUB_ACTIONS")
 
 load_dotenv(BASE_DIR / ".env")
 
