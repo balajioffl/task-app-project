@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from django.core.exceptions import PermissionDenied
 from rest_framework.views import APIView
-from .models import Task,Profile
+from .models import Task, Profile
 from django.db.models import Q
 from django.contrib.auth.models import User
 from .serializers import TaskSerializer
@@ -16,7 +16,7 @@ from rest_framework.filters import SearchFilter
 from django.core.cache import cache
 from django.conf import settings
 import logging
-from .tasks import task_activity_log,send_task_assigned_email
+from .tasks import task_activity_log, send_task_assigned_email
 import csv
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
@@ -37,11 +37,7 @@ def check(request):
 @permission_classes([IsAuthenticated])
 def test_api(request):
 
-    return Response(
-    {
-        "msg": "JWT is working !",
-        "user": request.user.username
-    })
+    return Response({"msg": "JWT is working !", "user": request.user.username})
 
 
 class TaskViewSet(ModelViewSet):
@@ -53,24 +49,22 @@ class TaskViewSet(ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
     pagination_class = TaskPagination
 
-    filter_backends = [SearchFilter,DjangoFilterBackend]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     filterset_class = TaskFilter
-    search_fields = ['title', 'description']
-
+    search_fields = ["title", "description"]
 
     def get_queryset(self):
-        
+
         user = self.request.user
 
         if user.groups.filter(name="Admin").exists():
             return Task.objects.all()
-        
+
         elif user.groups.filter(name="Member").exists():
             return Task.objects.filter(Q(created_by=user) | Q(assigned_to=user))
-        
+
         else:
             return Task.objects.filter(created_by=user)
-    
 
     def list(self, request, *args, **kwargs):
 
@@ -83,7 +77,7 @@ class TaskViewSet(ModelViewSet):
             f"tasks_admin_{query_string}"
             if is_admin
             else f"tasks_user_{user.id}_{query_string}"
-)
+        )
         cached_data = cache.get(cache_key)
 
         if cached_data:
@@ -97,7 +91,6 @@ class TaskViewSet(ModelViewSet):
 
         return response
 
-
     def perform_create(self, serializer):
 
         user = self.request.user
@@ -106,13 +99,11 @@ class TaskViewSet(ModelViewSet):
 
             task = serializer.save(created_by=user)
 
-            task_activity_log.delay(task.id,"CREATED",self.request.user.username)
+            task_activity_log.delay(task.id, "CREATED", self.request.user.username)
 
             if task.assigned_to:
                 send_task_assigned_email.delay(
-                    task.assigned_to.email,
-                    task.title,
-                    user.username
+                    task.assigned_to.email, task.title, user.username
                 )
 
             cache.clear()
@@ -122,13 +113,12 @@ class TaskViewSet(ModelViewSet):
         else:
             raise PermissionDenied("You can only view tasks!")
 
-
     def perform_update(self, serializer):
 
         user = self.request.user
         task = serializer.instance
         old_assigned_to = task.assigned_to
-        
+
         if user.groups.filter(name="Admin").exists():
             updated_task = serializer.save()
 
@@ -137,7 +127,9 @@ class TaskViewSet(ModelViewSet):
             if task.created_by == user or task.assigned_to == user:
                 updated_task = serializer.save()
             else:
-                raise PermissionDenied("Managers can only edit tasks they created or are assigned to!")
+                raise PermissionDenied(
+                    "Managers can only edit tasks they created or are assigned to!"
+                )
 
         else:
             raise PermissionDenied("Members cannot edit tasks!")
@@ -145,20 +137,17 @@ class TaskViewSet(ModelViewSet):
         task_activity_log.delay(task.id, "UPDATED", user.username)
 
         if updated_task.assigned_to and updated_task.assigned_to != old_assigned_to:
-           
+
             send_task_assigned_email.delay(
-                updated_task.assigned_to.email,
-                updated_task.title,
-                user.username
+                updated_task.assigned_to.email, updated_task.title, user.username
             )
 
         cache.clear()
 
         print("Cache cleared after task update")
-            
-        
+
     def perform_destroy(self, instance):
-        
+
         user = self.request.user
         task_id = instance.id
 
@@ -167,45 +156,50 @@ class TaskViewSet(ModelViewSet):
 
         else:
             raise PermissionDenied("Only Admin can delete tasks !")
-            
-        task_activity_log.delay(task_id,"DELETED",user.username)
-            
+
+        task_activity_log.delay(task_id, "DELETED", user.username)
+
         cache.clear()
 
         print("Cache cleared after task delete")
-            
-    
-@api_view(['GET'])
+
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user_groups(request):
-    
-    return Response({
-        "username": request.user.username,
-        "groups": list(request.user.groups.values_list("name", flat=True))
-    })
+
+    return Response(
+        {
+            "username": request.user.username,
+            "groups": list(request.user.groups.values_list("name", flat=True)),
+        }
+    )
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def profile(request):
-    return Response({
-        "username": request.user.username,
-    })
+    return Response(
+        {
+            "username": request.user.username,
+        }
+    )
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def user_list(request):
-    users = User.objects.all().values('id', 'username')
+    users = User.objects.all().values("id", "username")
     return Response(users)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def export_csv(request):
-    
-    response = HttpResponse(content_type='text/csv')
+
+    response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="tasks.csv"'
-    
+
     writer = csv.writer(response)
     writer.writerow(["ID", "Title", "Status", "Priority"])
 
@@ -213,6 +207,7 @@ def export_csv(request):
         writer.writerow(["ID", "Title", "Status", "Priority"])
 
     return response
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -257,18 +252,20 @@ class ProfileView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
+    def get(self, request):
 
         profile, created = Profile.objects.get_or_create(user=request.user)
 
-        return Response({ 
-            "username": request.user.username,
-            "bio_pic": profile.bio_pic.url if profile.bio_pic else None 
-        })
+        return Response(
+            {
+                "username": request.user.username,
+                "bio_pic": profile.bio_pic.url if profile.bio_pic else None,
+            }
+        )
 
 
 class ProfileUpdate(APIView):
-    
+
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
@@ -277,16 +274,16 @@ class ProfileUpdate(APIView):
         profile, _ = Profile.objects.get_or_create(user=request.user)
 
         if "bio_pic" not in request.data:
-            return Response({ "error": "bio_pic required"}, status=400 )
+            return Response({"error": "bio_pic required"}, status=400)
 
         profile.bio_pic = request.data["bio_pic"]
         profile.save()
 
-        return Response({ "bio_pic": profile.bio_pic.url })
+        return Response({"bio_pic": profile.bio_pic.url})
 
 
 class ProfileDelete(APIView):
-    
+
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):
@@ -302,4 +299,3 @@ class ProfileDelete(APIView):
                 os.remove(file_path)
 
         return Response({"message": "Bio pic deleted"})
-    
