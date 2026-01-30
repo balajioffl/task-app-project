@@ -15,7 +15,7 @@ function UserAvatar() {
     })
 
     .then(res => setBioPic(res.data.bio_pic));
-    }, []);
+    }, [token]);
 
     const uploadImage = (file) => {
 

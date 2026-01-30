@@ -23,6 +23,8 @@ function AuthProvider({ children }) {
 
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const fetchProfile = async (accessToken) => {
     try {
       const response = await fetch("http://127.0.0.1:8000/api/profile/", {

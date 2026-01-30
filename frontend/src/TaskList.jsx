@@ -4,7 +4,7 @@ import TaskForm from "./TaskForm";
 import { useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ErrorBoundary from "./ErrorBoundary";
+// import ErrorBoundary from "./ErrorBoundary";
 import "./TaskList.css";
 
 function TaskList() {
@@ -30,7 +30,7 @@ function TaskList() {
   const createdAfter = searchParams.get("created_at_after") || "";
   const createdBefore = searchParams.get("created_at_before") || "";
 
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
  
 
   const token = localStorage.getItem("token");

@@ -28,7 +28,7 @@ function TaskForm({ selectedTask, onSuccess, onClose }) {
       .catch((err) => {
         console.log("Error fetching users", err);
       });
-    }, []);
+    }, [token]);
 
   useEffect(() => {
     if (selectedTask) 
