@@ -8,6 +8,8 @@ function AuthProvider({ children }) {
   const [tokens, setTokens] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   useEffect(() => 
   {
     const storedTokens = localStorage.getItem("tokens");
@@ -22,8 +24,6 @@ function AuthProvider({ children }) {
     }
 
   }, []);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const fetchProfile = async (accessToken) => {
     try {

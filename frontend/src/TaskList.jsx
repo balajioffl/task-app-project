@@ -65,6 +65,8 @@ function TaskList() {
       .finally(() => setLoading(false));
   };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+
       useEffect(() => {
         fetchTasks();
       },[searchParams]);
@@ -72,6 +74,9 @@ function TaskList() {
     //   useEffect(() => {
     //   throw new Error("Test error in TaskList!");
     // }, []);
+
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 
       useEffect(() => {
      
@@ -115,6 +120,8 @@ function TaskList() {
       return () => ws.close();
     }, []);
 
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
       
       useEffect(() => {
 
