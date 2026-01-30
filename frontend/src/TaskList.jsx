@@ -30,7 +30,7 @@ function TaskList() {
   const createdAfter = searchParams.get("created_at_after") || "";
   const createdBefore = searchParams.get("created_at_before") || "";
 
-  // const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState(null);
  
 
   const token = localStorage.getItem("token");

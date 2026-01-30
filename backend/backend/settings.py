@@ -46,10 +46,6 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    os.getenv("FRONTEND_URL", "http://localhost:3000"),
-]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -106,6 +102,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
+}
 
 DATABASES = {
     "default": {
