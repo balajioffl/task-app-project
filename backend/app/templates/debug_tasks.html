@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Debug</title>
+    <style>
+        table { 
+            border-collapse: collapse; 
+            width: 40%; 
+            margin: 20px auto; 
+        }
+        th, td { 
+            border: 1px solid #ccc;
+            padding: 8px 12px; 
+            text-align: left; }
+        th { 
+            background-color: #f2f2f2; 
+        }
+        strong{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Task Debug List</h1>
+
+    <p style="text-align:center;">
+        Queries <strong>without select_related (N+1)</strong>: {{ total_queries_n1 }} <br>
+        Queries <strong>with select_related (fixed)</strong>: {{ total_queries_fixed }}
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.created_by.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

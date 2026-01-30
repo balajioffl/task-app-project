@@ -299,3 +299,37 @@ class ProfileDelete(APIView):
                 os.remove(file_path)
 
         return Response({"message": "Bio pic deleted"})
+
+
+# # debug toolbar
+
+# from django.test.utils import CaptureQueriesContext
+# from django.db import connection
+# from django.shortcuts import render
+# from .models import Task
+
+# def task_debug_view(request):
+
+#     with CaptureQueriesContext(connection) as ctx_n1:
+#         tasks_n1 = Task.objects.all()
+#         for task in tasks_n1:
+#             _ = task.created_by.username
+#             if task.assigned_to:
+#                 _ = task.assigned_to.username
+
+#     with CaptureQueriesContext(connection) as ctx_fixed:
+#         tasks_fixed = Task.objects.select_related("created_by", "assigned_to").all()
+#         for task in tasks_fixed:
+#             _ = task.created_by.username
+#             if task.assigned_to:
+#                 _ = task.assigned_to.username
+
+#     return render(
+#         request,
+#         "debug_tasks.html",
+#         {
+#             "tasks": tasks_fixed,
+#             "total_queries_fixed": len(ctx_fixed),
+#             "total_queries_n1": len(ctx_n1),
+#         },
+#     )

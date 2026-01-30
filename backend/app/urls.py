@@ -9,6 +9,7 @@ from .views import (
     ProfileView,
     ProfileUpdate,
     ProfileDelete,
+    # task_debug_view
 )
 
 router = DefaultRouter()
@@ -26,5 +27,6 @@ urlpatterns = [
     path("profile/", ProfileView.as_view()),
     path("profile/bio-pic/", ProfileUpdate.as_view()),
     path("profile/bio-pic/delete/", ProfileDelete.as_view()),
+    # path("debug/tasks/", task_debug_view),
     path("", include(router.urls)),
 ]
