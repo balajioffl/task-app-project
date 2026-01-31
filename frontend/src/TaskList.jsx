@@ -30,8 +30,7 @@ function TaskList() {
   const createdAfter = searchParams.get("created_at_after") || "";
   const createdBefore = searchParams.get("created_at_before") || "";
 
-  const [socket, setSocket] = useState(null);
- 
+  const [socket, setSocket] = useState(null); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const token = localStorage.getItem("token");
 
