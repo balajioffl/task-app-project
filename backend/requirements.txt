@@ -1,14 +1,12 @@
 # Database (MySQL)
-# PyMySQL>=1.0.2
-# cryptography>=41.0.0
-# mysqlclient>=2.2.0
-
+PyMySQL>=1.0.2
+cryptography>=41.0.0
+mysqlclient>=2.2.0
 
 # Core Django
 Django>=4.2,<5.0
 django-debug-toolbar
 dj-database-url==1.2.0
-psycopg2-binary
 
 # Django REST Framework
 djangorestframework
