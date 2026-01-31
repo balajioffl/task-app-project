@@ -1,27 +1,32 @@
-services:
-  # db:
-  #   image: mysql:8.0
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: rootpassword
-  #     MYSQL_DATABASE: db_myapp
-  #     MYSQL_USER: myuser
-  #     MYSQL_PASSWORD: Dckap2023Ecommerce
-  #   volumes:
-  #     - db_data:/var/lib/mysql
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+version: "3.9"
 
-  # redis:
-  #   image: redis:7
-  #   restart: always
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: db_myapp
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d db_myapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    restart: always
 
   backend:
     build: ./backend
-    command: ["./wait-for-it.sh", "db:3306", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: >
+      sh -c "./wait-for-it.sh db:5432 --
+      python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     env_file:
@@ -39,6 +44,8 @@ services:
     command: celery -A backend worker -l info
     env_file:
       - .env
+    volumes:
+      - ./backend:/app
     depends_on:
       db:
         condition: service_healthy
@@ -49,6 +56,8 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
 
 volumes:
-  db_data:
+  pg_data:
