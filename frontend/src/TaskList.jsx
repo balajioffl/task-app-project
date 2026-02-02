@@ -38,7 +38,7 @@ function TaskList() {
   const fetchTasks = () => {
     setLoading(true);
     axios
-      .get("http://127.0.0.1:8000/api/tasks/", 
+      .get("https://task-app-project-6uvh.onrender.com/api/tasks/", 
       {
         headers: { Authorization: `Bearer ${token}` },
 
