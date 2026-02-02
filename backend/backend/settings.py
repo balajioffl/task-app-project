@@ -211,10 +211,25 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "backend.exceptions.custom_exception_handler",
 }
 
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://redis:6379/1",
+#     }
+# }
+
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
+CELERY_BROKER_URL = "memory://"
+CELERY_RESULT_BACKEND = "django-db"  # You can keep this if using django-celery-results
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
 
@@ -232,10 +247,10 @@ LOGGING = {
     },
 }
 
-CELERY_BROKER_URL = "redis://redis:6379/0"
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_BACKEND = "django-db"
+# CELERY_BROKER_URL = "redis://redis:6379/0"
+# CELERY_ACCEPT_CONTENT = ["json"]
+# CELERY_TASK_SERIALIZER = "json"
+# CELERY_RESULT_BACKEND = "django-db"
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -251,14 +266,14 @@ if not EMAIL_HOST_PASSWORD:
 
 ASGI_APPLICATION = "backend.asgi.application"
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", 6379)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("redis", 6379)],
+#         },
+#     },
+# }
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Your Project API",
