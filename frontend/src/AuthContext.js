@@ -27,7 +27,7 @@ function AuthProvider({ children }) {
 
   const fetchProfile = async (accessToken) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/profile/", {
+      const response = await fetch("https://task-app-project-6uvh.onrender.com/api/profile/", {
         headers: 
         {
           Authorization: "Bearer " + accessToken,

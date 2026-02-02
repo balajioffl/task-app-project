@@ -5,7 +5,7 @@ function Check() {
   const [status, setStatus] = useState("Loading...");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/check/")
+    fetch("https://task-app-project-6uvh.onrender.com/api/check/")
       .then(res => res.json())
       .then(data => 
       {

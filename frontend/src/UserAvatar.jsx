@@ -10,7 +10,7 @@ function UserAvatar() {
     const token = localStorage.getItem("token")
 
     useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/profile/", {
+    axios.get("https://task-app-project-6uvh.onrender.com/api/profile/", {
       headers: { Authorization: `Bearer ${token}` },
     })
 
@@ -25,7 +25,7 @@ function UserAvatar() {
         const formData = new FormData();
         formData.append("bio_pic", file);
 
-        axios.put("http://127.0.0.1:8000/api/profile/bio-pic/",
+        axios.put("https://task-app-project-6uvh.onrender.com/api/profile/bio-pic/",
         formData,
         {
             headers: {
@@ -43,7 +43,7 @@ function UserAvatar() {
 
     const deleteImage = () => {
 
-        axios.delete("http://127.0.0.1:8000/api/profile/bio-pic/delete/",
+        axios.delete("https://task-app-project-6uvh.onrender.com/api/profile/bio-pic/delete/",
         {
             headers: { Authorization: `Bearer ${token}` },
         }
@@ -59,14 +59,14 @@ function UserAvatar() {
       return (
         <div className="avatar-wrapper">
 
-        <img src={bioPic ? `http://127.0.0.1:8000${bioPic}` : "/default-icon.svg"} alt="profile" className="avatar-icon"
+        <img src={bioPic ? `https://task-app-project-6uvh.onrender.com${bioPic}` : "/default-icon.svg"} alt="profile" className="avatar-icon"
             onClick={() => setOpen(!open)} />
 
         {open && (
         
         <div className="avatar-popup">
 
-        <img src={bioPic ? `http://127.0.0.1:8000${bioPic}` : "/default-icon.svg"} alt="preview" className="avatar-preview"/>
+        <img src={bioPic ? `https://task-app-project-6uvh.onrender.com${bioPic}` : "/default-icon.svg"} alt="preview" className="avatar-preview"/>
 
             <label>
 

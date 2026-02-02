@@ -17,7 +17,7 @@ function TaskForm({ selectedTask, onSuccess, onClose }) {
   const token = localStorage.getItem("token");
 
       useEffect(() => {
-      axios.get("http://127.0.0.1:8000/api/users/", {
+      axios.get("https://task-app-project-6uvh.onrender.com/api/users/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -77,8 +77,8 @@ function TaskForm({ selectedTask, onSuccess, onClose }) {
       }
 
       const url = selectedTask
-        ? `http://127.0.0.1:8000/api/tasks/${selectedTask.id}/`
-        : "http://127.0.0.1:8000/api/tasks/";
+        ? `https://task-app-project-6uvh.onrender.com/api/tasks/${selectedTask.id}/`
+        : "https://task-app-project-6uvh.onrender.com/api/tasks/";
 
       const method = selectedTask ? axios.put : axios.post;
 
