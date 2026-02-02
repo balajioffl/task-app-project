@@ -124,7 +124,7 @@ function TaskList() {
       
       useEffect(() => {
 
-      axios.get("http://127.0.0.1:8000/api/user-groups/", 
+      axios.get("https://task-app-project-6uvh.onrender.com/api/user-groups/", 
       {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -142,7 +142,7 @@ function TaskList() {
         if (!window.confirm("Delete this task?")) return;
 
         axios
-          .delete(`http://127.0.0.1:8000/api/tasks/${id}/`, 
+          .delete(`https://task-app-project-6uvh.onrender.com/api/tasks/${id}/`, 
           {
             headers: { Authorization: `Bearer ${token}` },
           })
@@ -161,7 +161,7 @@ function TaskList() {
       const exportPDF = () => {
 
         axios.get(
-          "http://127.0.0.1:8000/api/export/tasks/pdf/",
+          "https://task-app-project-6uvh.onrender.com/api/export/tasks/pdf/",
           {
             headers: {
               Authorization: `Bearer ${token}`,
