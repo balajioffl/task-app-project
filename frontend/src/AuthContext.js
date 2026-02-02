@@ -25,33 +25,33 @@ function AuthProvider({ children }) {
 
   }, []);
 
-  const fetchProfile = async (accessToken) => {
-    try {
-      const response = await fetch("https://task-app-project-6uvh.onrender.com/api/profile/", {
-        headers: 
-        {
-          Authorization: "Bearer " + accessToken,
-        },
-      });
+  // const fetchProfile = async (accessToken) => {
+  //   try {
+  //     const response = await fetch("https://task-app-project-6uvh.onrender.com/api/profile/", {
+  //       headers: 
+  //       {
+  //         Authorization: "Bearer " + accessToken,
+  //       },
+  //     });
 
-      if (response.ok) 
-      {
-        const userData = await response.json();
-        setUser(userData);
-      } 
+  //     if (response.ok) 
+  //     {
+  //       const userData = await response.json();
+  //       setUser(userData);
+  //     } 
       
-      else {
-        logoutUser();
-      }
+  //     else {
+  //       logoutUser();
+  //     }
 
-    }
-     catch {
-      logoutUser();
-    }
-     finally {
-      setLoading(false);
-    }
-  };
+  //   }
+  //    catch {
+  //     logoutUser();
+  //   }
+  //    finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const loginUser = async (tokenData) => {
     setTokens(tokenData);
