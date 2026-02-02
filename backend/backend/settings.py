@@ -41,9 +41,18 @@ SECRET_KEY = 'django-insecure-rbx=8w1%+09zv!n3x05$*1l1tzg3rpu4kq@c#v&g(%%v_8=!yw
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
-
 CORS_ALLOW_ALL_ORIGINS = True
+
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "task-app-project-6uvh.onrender.com",
+]
 
 # Application definition
 
